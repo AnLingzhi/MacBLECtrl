@@ -1,0 +1,11 @@
+{
+  "": {
+    "swift-dependencies": "/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrl.build/master.swiftdeps"
+  },
+  "/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/Sources/MacBLECtrl/main.swift": {
+    "dependencies": "/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrl.build/main.d",
+    "object": "/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrl.build/main.swift.o",
+    "swiftmodule": "/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrl.build/main~partial.swiftmodule",
+    "swift-dependencies": "/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrl.build/main.swiftdeps"
+  }
+}

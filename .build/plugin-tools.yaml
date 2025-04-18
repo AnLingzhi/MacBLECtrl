@@ -1,0 +1,146 @@
+client:
+  name: basic
+  file-system: device-agnostic
+tools: {}
+targets:
+  "MacBLECtrl-arm64-apple-macosx15.0-debug.exe": ["<MacBLECtrl-arm64-apple-macosx15.0-debug.exe>"]
+  "MacBLECtrl-arm64-apple-macosx15.0-debug.module": ["<MacBLECtrl-arm64-apple-macosx15.0-debug.module>"]
+  "MacBLECtrlPackageTests-arm64-apple-macosx15.0-debug.module": ["<MacBLECtrlPackageTests-arm64-apple-macosx15.0-debug.module>"]
+  "MacBLECtrlPackageTests-arm64-apple-macosx15.0-debug.test": ["<MacBLECtrlPackageTests-arm64-apple-macosx15.0-debug.test>"]
+  "MacBLECtrlTests-arm64-apple-macosx15.0-debug.module": ["<MacBLECtrlTests-arm64-apple-macosx15.0-debug.module>"]
+  "PackageStructure": ["<PackageStructure>"]
+  "main": ["<MacBLECtrl-arm64-apple-macosx15.0-debug.exe>","<MacBLECtrl-arm64-apple-macosx15.0-debug.module>"]
+  "test": ["<MacBLECtrl-arm64-apple-macosx15.0-debug.exe>","<MacBLECtrl-arm64-apple-macosx15.0-debug.module>","<MacBLECtrlPackageTests-arm64-apple-macosx15.0-debug.test>","<MacBLECtrlTests-arm64-apple-macosx15.0-debug.module>"]
+default: "main"
+nodes:
+  "/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/Sources/MacBLECtrl/":
+    is-directory-structure: true
+    content-exclusion-patterns: [".git",".build"]
+  "/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/Tests/MacBLECtrlTests/":
+    is-directory-structure: true
+    content-exclusion-patterns: [".git",".build"]
+  "/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrl":
+    is-mutated: true
+commands:
+  "/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrl-entitlement.plist":
+    tool: write-auxiliary-file
+    inputs: ["<entitlement-plist>","<com.apple.security.get-task-allow>"]
+    outputs: ["/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrl-entitlement.plist"]
+    description: "Write auxiliary file /Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrl-entitlement.plist"
+
+  "/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrl.build/sources":
+    tool: write-auxiliary-file
+    inputs: ["<sources-file-list>","/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/Sources/MacBLECtrl/main.swift"]
+    outputs: ["/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrl.build/sources"]
+    description: "Write auxiliary file /Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrl.build/sources"
+
+  "/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrl.product/Objects.LinkFileList":
+    tool: write-auxiliary-file
+    inputs: ["<link-file-list>","/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrl.build/main.swift.o"]
+    outputs: ["/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrl.product/Objects.LinkFileList"]
+    description: "Write auxiliary file /Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrl.product/Objects.LinkFileList"
+
+  "/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrlPackageTests.build/sources":
+    tool: write-auxiliary-file
+    inputs: ["<sources-file-list>","/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrlPackageTests.derived/runner.swift"]
+    outputs: ["/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrlPackageTests.build/sources"]
+    description: "Write auxiliary file /Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrlPackageTests.build/sources"
+
+  "/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrlPackageTests.derived/runner.swift":
+    tool: test-entry-point-tool
+    inputs: []
+    outputs: ["/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrlPackageTests.derived/runner.swift"]
+
+  "/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrlPackageTests.product/Objects.LinkFileList":
+    tool: write-auxiliary-file
+    inputs: ["<link-file-list>","/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrlPackageTests.build/runner.swift.o","/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrlTests.build/MacBLECtrlTests.swift.o"]
+    outputs: ["/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrlPackageTests.product/Objects.LinkFileList"]
+    description: "Write auxiliary file /Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrlPackageTests.product/Objects.LinkFileList"
+
+  "/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrlTests.build/sources":
+    tool: write-auxiliary-file
+    inputs: ["<sources-file-list>","/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/Tests/MacBLECtrlTests/MacBLECtrlTests.swift"]
+    outputs: ["/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrlTests.build/sources"]
+    description: "Write auxiliary file /Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrlTests.build/sources"
+
+  "/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/swift-version--FFA110AA97D2918.txt":
+    tool: write-auxiliary-file
+    inputs: ["<swift-get-version>","/Volumes/SSD/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"]
+    outputs: ["/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/swift-version--FFA110AA97D2918.txt"]
+    always-out-of-date: "true"
+    description: "Write auxiliary file /Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/swift-version--FFA110AA97D2918.txt"
+
+  "<MacBLECtrl-arm64-apple-macosx15.0-debug.exe>":
+    tool: phony
+    inputs: ["<MacBLECtrl-arm64-apple-macosx15.0-debug.exe-CodeSigning>"]
+    outputs: ["<MacBLECtrl-arm64-apple-macosx15.0-debug.exe>"]
+
+  "<MacBLECtrl-arm64-apple-macosx15.0-debug.module>":
+    tool: phony
+    inputs: ["/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrl.build/main.swift.o","/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrl.build/MacBLECtrl.swiftmodule"]
+    outputs: ["<MacBLECtrl-arm64-apple-macosx15.0-debug.module>"]
+
+  "<MacBLECtrlPackageTests-arm64-apple-macosx15.0-debug.module>":
+    tool: phony
+    inputs: ["/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrlPackageTests.build/runner.swift.o","/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/Modules/MacBLECtrlPackageTests.swiftmodule"]
+    outputs: ["<MacBLECtrlPackageTests-arm64-apple-macosx15.0-debug.module>"]
+
+  "<MacBLECtrlPackageTests-arm64-apple-macosx15.0-debug.test>":
+    tool: phony
+    inputs: ["/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrlPackageTests.xctest/Contents/MacOS/MacBLECtrlPackageTests"]
+    outputs: ["<MacBLECtrlPackageTests-arm64-apple-macosx15.0-debug.test>"]
+
+  "<MacBLECtrlTests-arm64-apple-macosx15.0-debug.module>":
+    tool: phony
+    inputs: ["/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrlTests.build/MacBLECtrlTests.swift.o","/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/Modules/MacBLECtrlTests.swiftmodule"]
+    outputs: ["<MacBLECtrlTests-arm64-apple-macosx15.0-debug.module>"]
+
+  "C.MacBLECtrl-arm64-apple-macosx15.0-debug.exe":
+    tool: shell
+    inputs: ["/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrl.build/main.swift.o","/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrl.product/Objects.LinkFileList"]
+    outputs: ["/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrl"]
+    description: "Linking ./.build/arm64-apple-macosx/debug/MacBLECtrl"
+    args: ["/Volumes/SSD/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc","-L","/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug","-o","/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrl","-module-name","MacBLECtrl","-Xlinker","-no_warn_duplicate_libraries","-emit-executable","-Xlinker","-rpath","-Xlinker","@loader_path","@/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrl.product/Objects.LinkFileList","-Xlinker","-rpath","-Xlinker","/Volumes/SSD/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift-5.5/macosx","-target","arm64-apple-macosx10.15","-Xlinker","-add_ast_path","-Xlinker","/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrl.build/MacBLECtrl.swiftmodule","-sdk","/Volumes/SSD/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.4.sdk","-F","/Volumes/SSD/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-F","/Volumes/SSD/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks","-I","/Volumes/SSD/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-L","/Volumes/SSD/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-g"]
+
+  "C.MacBLECtrl-arm64-apple-macosx15.0-debug.exe-entitlements":
+    tool: shell
+    inputs: ["/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrl","/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrl-entitlement.plist"]
+    outputs: ["<MacBLECtrl-arm64-apple-macosx15.0-debug.exe-CodeSigning>"]
+    description: "Applying debug entitlements to ./.build/arm64-apple-macosx/debug/MacBLECtrl"
+    args: ["codesign","--force","--sign","-","--entitlements","/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrl-entitlement.plist","/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrl"]
+
+  "C.MacBLECtrl-arm64-apple-macosx15.0-debug.module":
+    tool: shell
+    inputs: ["/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/Sources/MacBLECtrl/main.swift","/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/swift-version--FFA110AA97D2918.txt","/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrl.build/sources"]
+    outputs: ["/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrl.build/main.swift.o","/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrl.build/MacBLECtrl.swiftmodule"]
+    description: "Compiling Swift Module 'MacBLECtrl' (1 sources)"
+    args: ["/Volumes/SSD/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc","-module-name","MacBLECtrl","-emit-dependencies","-emit-module","-emit-module-path","/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrl.build/MacBLECtrl.swiftmodule","-output-file-map","/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrl.build/output-file-map.json","-incremental","-c","@/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrl.build/sources","-I","/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/Modules","-target","arm64-apple-macosx10.15","-enable-batch-mode","-index-store-path","/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/index/store","-Onone","-enable-testing","-j10","-DSWIFT_PACKAGE","-DDEBUG","-module-cache-path","/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/ModuleCache","-parseable-output","-color-diagnostics","-swift-version","5","-sdk","/Volumes/SSD/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.4.sdk","-F","/Volumes/SSD/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-F","/Volumes/SSD/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks","-I","/Volumes/SSD/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-L","/Volumes/SSD/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-g","-Xcc","-isysroot","-Xcc","/Volumes/SSD/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.4.sdk","-Xcc","-F","-Xcc","/Volumes/SSD/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-Xcc","-F","-Xcc","/Volumes/SSD/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks","-Xcc","-fPIC","-Xcc","-g"]
+
+  "C.MacBLECtrlPackageTests-arm64-apple-macosx15.0-debug.module":
+    tool: shell
+    inputs: ["/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrlPackageTests.derived/runner.swift","/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/swift-version--FFA110AA97D2918.txt","/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/Modules/MacBLECtrlTests.swiftmodule","/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrlPackageTests.build/sources"]
+    outputs: ["/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrlPackageTests.build/runner.swift.o","/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/Modules/MacBLECtrlPackageTests.swiftmodule"]
+    description: "Compiling Swift Module 'MacBLECtrlPackageTests' (1 sources)"
+    args: ["/Volumes/SSD/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc","-module-name","MacBLECtrlPackageTests","-emit-dependencies","-emit-module","-emit-module-path","/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/Modules/MacBLECtrlPackageTests.swiftmodule","-output-file-map","/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrlPackageTests.build/output-file-map.json","-parse-as-library","-incremental","-c","@/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrlPackageTests.build/sources","-I","/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/Modules","-target","arm64-apple-macosx10.15","-enable-batch-mode","-index-store-path","/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/index/store","-Onone","-enable-testing","-Xfrontend","-enable-cross-import-overlays","-j10","-DSWIFT_PACKAGE","-DDEBUG","-module-cache-path","/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/ModuleCache","-parseable-output","-parse-as-library","-emit-objc-header","-emit-objc-header-path","/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrlPackageTests.build/MacBLECtrlPackageTests-Swift.h","-color-diagnostics","-sdk","/Volumes/SSD/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.4.sdk","-F","/Volumes/SSD/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-F","/Volumes/SSD/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks","-I","/Volumes/SSD/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-L","/Volumes/SSD/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-g","-Xcc","-isysroot","-Xcc","/Volumes/SSD/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.4.sdk","-Xcc","-F","-Xcc","/Volumes/SSD/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-Xcc","-F","-Xcc","/Volumes/SSD/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks","-Xcc","-fPIC","-Xcc","-g"]
+
+  "C.MacBLECtrlPackageTests-arm64-apple-macosx15.0-debug.test":
+    tool: shell
+    inputs: ["/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrlPackageTests.build/runner.swift.o","/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrlTests.build/MacBLECtrlTests.swift.o","/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrlPackageTests.product/Objects.LinkFileList"]
+    outputs: ["/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrlPackageTests.xctest/Contents/MacOS/MacBLECtrlPackageTests"]
+    description: "Linking ./.build/arm64-apple-macosx/debug/MacBLECtrlPackageTests.xctest/Contents/MacOS/MacBLECtrlPackageTests"
+    args: ["/Volumes/SSD/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc","-L","/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug","-o","/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrlPackageTests.xctest/Contents/MacOS/MacBLECtrlPackageTests","-module-name","MacBLECtrlPackageTests","-Xlinker","-no_warn_duplicate_libraries","-Xlinker","-bundle","-Xlinker","-rpath","-Xlinker","@loader_path/../../../","@/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrlPackageTests.product/Objects.LinkFileList","-target","arm64-apple-macosx14.0","-Xlinker","-add_ast_path","-Xlinker","/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/Modules/MacBLECtrlPackageTests.swiftmodule","-Xlinker","-add_ast_path","-Xlinker","/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/Modules/MacBLECtrlTests.swiftmodule","-sdk","/Volumes/SSD/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.4.sdk","-F","/Volumes/SSD/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-F","/Volumes/SSD/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks","-I","/Volumes/SSD/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-L","/Volumes/SSD/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-g"]
+
+  "C.MacBLECtrlTests-arm64-apple-macosx15.0-debug.module":
+    tool: shell
+    inputs: ["/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/Tests/MacBLECtrlTests/MacBLECtrlTests.swift","/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/swift-version--FFA110AA97D2918.txt","/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrl","/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrlTests.build/sources"]
+    outputs: ["/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrlTests.build/MacBLECtrlTests.swift.o","/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/Modules/MacBLECtrlTests.swiftmodule"]
+    description: "Compiling Swift Module 'MacBLECtrlTests' (1 sources)"
+    args: ["/Volumes/SSD/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc","-module-name","MacBLECtrlTests","-emit-dependencies","-emit-module","-emit-module-path","/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/Modules/MacBLECtrlTests.swiftmodule","-output-file-map","/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrlTests.build/output-file-map.json","-parse-as-library","-incremental","-c","@/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrlTests.build/sources","-I","/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/Modules","-target","arm64-apple-macosx14.0","-enable-batch-mode","-index-store-path","/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/index/store","-Onone","-enable-testing","-Xfrontend","-enable-cross-import-overlays","-j10","-DSWIFT_PACKAGE","-DDEBUG","-module-cache-path","/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/ModuleCache","-parseable-output","-parse-as-library","-color-diagnostics","-swift-version","5","-sdk","/Volumes/SSD/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.4.sdk","-F","/Volumes/SSD/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-F","/Volumes/SSD/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks","-I","/Volumes/SSD/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-L","/Volumes/SSD/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-g","-Xcc","-isysroot","-Xcc","/Volumes/SSD/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.4.sdk","-Xcc","-F","-Xcc","/Volumes/SSD/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-Xcc","-F","-Xcc","/Volumes/SSD/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks","-Xcc","-fPIC","-Xcc","-g"]
+
+  "PackageStructure":
+    tool: package-structure-tool
+    inputs: ["/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/Sources/MacBLECtrl/","/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/Tests/MacBLECtrlTests/","/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/Package.swift","/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/Package.resolved"]
+    outputs: ["<PackageStructure>"]
+    description: "Planning build"
+    allow-missing-inputs: true
+
