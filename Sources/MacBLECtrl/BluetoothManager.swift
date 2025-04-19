@@ -199,8 +199,10 @@ actor BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate
             )
         } catch {
             logger.error("Failed to get battery level for \(peripheral.identifier): \(error)")
-            batteryPromises.removeValue(forKey: peripheral.identifier)
-            // Don't necessarily disconnect here, maybe the caller wants to retry?
+             batteryPromises.removeValue(forKey: peripheral.identifier)
+            // Disconnect if battery level fetch fails for already connected peripheral
+            logger.info("Disconnecting from \(peripheral.identifier) after battery level fetch failure.")
+            centralManager.cancelPeripheralConnection(peripheral)
             throw Abort(.internalServerError, reason: "Failed to retrieve battery level: \(error.localizedDescription)")
         }
     }
@@ -341,6 +343,9 @@ actor BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate
             // Use a valid HTTP status or a generic error
             promise.fail(error ?? Abort(.internalServerError, reason: "Failed to connect"))
         }
+        // Disconnect after connection failure
+        logger.info("Disconnecting from \(peripheral.identifier) after connection failure.")
+        centralManager.cancelPeripheralConnection(peripheral)
     }
 
      nonisolated func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
@@ -393,6 +398,8 @@ actor BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate
         } else {
             logger.warning("Battery Service (\(batteryServiceUUID.uuidString)) not found for \(peripheral.identifier)")
             failBatteryPromise(for: peripheral.identifier, error: Abort(.notFound, reason: "Battery service not found"))
+            // Disconnect if battery service not found
+            logger.info("Disconnecting from \(peripheral.identifier) as battery service not found.")
             centralManager.cancelPeripheralConnection(peripheral)
         }
     }
@@ -427,6 +434,8 @@ actor BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate
         } else {
             logger.warning("Battery Characteristic (\(batteryCharacteristicUUID.uuidString)) not found for \(peripheral.identifier)")
             failBatteryPromise(for: peripheral.identifier, error: Abort(.notFound, reason: "Battery characteristic not found"))
+            // Disconnect if battery characteristic not found
+            logger.info("Disconnecting from \(peripheral.identifier) as battery characteristic not found.")
             centralManager.cancelPeripheralConnection(peripheral)
         }
     }
@@ -469,10 +478,9 @@ actor BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate
                  logger.warning("Received battery level for \(peripheralID) but no promise was found.")
             }
 
-            // Optional: Disconnect after reading? Or keep connected?
-            // For a service, maybe keep connected for a short while? Or disconnect immediately.
-            // logger.info("Disconnecting from \(peripheralID) after reading battery.")
-            // centralManager.cancelPeripheralConnection(peripheral)
+            // Disconnect after successfully reading the battery level
+            logger.info("Disconnecting from \(peripheralID) after reading battery.")
+            centralManager.cancelPeripheralConnection(peripheral)
 
         } else {
             logger.warning("Received value update for unexpected characteristic \(characteristic.uuid) on \(peripheralID)")
