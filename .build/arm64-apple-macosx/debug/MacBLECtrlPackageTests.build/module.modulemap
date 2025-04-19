@@ -1,4 +1,4 @@
 module MacBLECtrlPackageTests {
-    header "/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrlPackageTests.build/MacBLECtrlPackageTests-Swift.h"
+    header "/Users/an/Documents/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrlPackageTests.build/MacBLECtrlPackageTests-Swift.h"
     requires objc
 }

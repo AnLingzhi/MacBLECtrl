@@ -1,7 +1,8 @@
 import Foundation
 import CoreBluetooth
 
-class BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
+// 使用BluetoothManager.swift中的实现，这里重命名为LegacyBluetoothManager
+class LegacyBluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
     private var scanDuration: Int = 20 // 默认扫描时间20秒
     private var centralManager: CBCentralManager!
     private var discoveredPeripherals: [CBPeripheral] = []
@@ -337,5 +338,5 @@ if deviceUUID == nil {
     }
 }
 
-let manager = BluetoothManager(scanDuration: scanTime, deviceUUID: deviceUUID)
+let manager = LegacyBluetoothManager(scanDuration: scanTime, deviceUUID: deviceUUID)
 RunLoop.main.run()
