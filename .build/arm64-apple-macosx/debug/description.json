@@ -8754,7 +8754,7 @@
       ],
       "isLibrary" : false,
       "moduleName" : "MacBLECtrl",
-      "moduleOutputPath" : "/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrl.build/MacBLECtrl.swiftmodule",
+      "moduleOutputPath" : "/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/Modules/MacBLECtrl.swiftmodule",
       "objects" : [
         "/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrl.build/BluetoothManager.swift.o",
         "/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrl.build/Application+BluetoothManager.swift.o",
@@ -8866,6 +8866,10 @@
         "-module-cache-path",
         "/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/ModuleCache",
         "-parseable-output",
+        "-Xfrontend",
+        "-entry-point-function-name",
+        "-Xfrontend",
+        "MacBLECtrl_main",
         "-color-diagnostics",
         "-swift-version",
         "5",
@@ -8921,7 +8925,7 @@
         },
         {
           "kind" : "file",
-          "name" : "/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrl.build/MacBLECtrl.swiftmodule"
+          "name" : "/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/Modules/MacBLECtrl.swiftmodule"
         }
       ],
       "prepareForIndexing" : false,
@@ -30644,6 +30648,10 @@
       "-module-cache-path",
       "/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/ModuleCache",
       "-parseable-output",
+      "-Xfrontend",
+      "-entry-point-function-name",
+      "-Xfrontend",
+      "MacBLECtrl_main",
       "-color-diagnostics",
       "-swift-version",
       "5",
@@ -50670,6 +50678,26 @@
         {
           "kind" : "file",
           "name" : "/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/Logging.build/MetadataProvider.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrl.build/Application+BluetoothManager.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrl.build/BluetoothManager.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrl.build/configure.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrl.build/main.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrl.build/routes.swift.o"
         },
         {
           "kind" : "file",

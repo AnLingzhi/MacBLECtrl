@@ -1,4 +1,4 @@
-// swift-tools-version:5.3
+// swift-tools-version:5.8
 import PackageDescription
 
 let package = Package(
@@ -8,12 +8,12 @@ let package = Package(
     .package(url: "https://github.com/vapor/vapor.git", from: "4.83.1")
 ],
     targets: [
-        .target(
+        .executableTarget( // Changed from .target to .executableTarget
             name: "MacBLECtrl",
             dependencies: [
                 .product(name: "Vapor", package: "vapor")
-            ]
-            // 移除Info.plist资源配置，因为它不支持作为顶级资源文件
+            ],
+            exclude: ["Info.plist"] // Explicitly exclude Info.plist to silence the warning
         ),
         .testTarget(
             name: "MacBLECtrlTests",
