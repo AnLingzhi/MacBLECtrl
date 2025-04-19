@@ -12,8 +12,8 @@ let package = Package(
             name: "MacBLECtrl",
             dependencies: [
                 .product(name: "Vapor", package: "vapor")
-            ],
-            resources: [.process("Sources/MacBLECtrl/Info.plist")]
+            ]
+            // 移除Info.plist资源配置，因为它不支持作为顶级资源文件
         ),
         .testTarget(
             name: "MacBLECtrlTests",

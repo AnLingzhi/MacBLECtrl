@@ -3,6 +3,6 @@ sensor:
     sensors:
       ble_battery:
         friendly_name: "蓝牙设备电量"
-        unit_of_measurement: "%"
+        unit_of_measurement: "%"　
         device_class: battery
         value_template: "{{ states('sensor.ble_battery') }}"

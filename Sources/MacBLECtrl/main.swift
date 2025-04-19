@@ -266,7 +266,8 @@ class LegacyBluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDe
         print("正在尝试直接连接到设备UUID: \(uuid)")
         
         // 尝试从系统已知设备中检索设备
-        let retrieveOptions: [String: Any] = [
+        // 移除未使用的变量
+        _ = [
             CBCentralManagerOptionShowPowerAlertKey: true
         ]
         

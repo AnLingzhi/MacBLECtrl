@@ -1,5 +1,5 @@
 import Vapor
-import MacBLECtrl // Assuming your module name is MacBLECtrl
+// 移除循环导入，因为该文件已经是MacBLECtrl模块的一部分
 
 // Extend Application to hold our BluetoothManager instance
 extension Application {

@@ -399,8 +399,9 @@ actor BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate
 
     nonisolated func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
         Task {
-            let peripheralIdentifier = peripheral.identifier
-            let serviceUUID = service.uuid
+            // 移除未使用的变量
+            _ = peripheral.identifier
+            _ = service.uuid
             await self.handleCharacteristicDiscovery(peripheral: peripheral, service: service, error: error)
         }
     }
@@ -432,9 +433,10 @@ actor BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate
 
     nonisolated func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
         Task {
-            let peripheralIdentifier = peripheral.identifier
-            let characteristicUUID = characteristic.uuid
-            let characteristicValue = characteristic.value
+            // 移除未使用的变量
+            _ = peripheral.identifier
+            _ = characteristic.uuid
+            _ = characteristic.value
             await self.handleValueUpdate(peripheral: peripheral, characteristic: characteristic, error: error)
         }
     }

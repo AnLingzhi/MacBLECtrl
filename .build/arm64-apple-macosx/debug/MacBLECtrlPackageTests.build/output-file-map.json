@@ -1,11 +1,11 @@
 {
   "": {
-    "swift-dependencies": "/Users/an/Documents/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrlPackageTests.build/master.swiftdeps"
+    "swift-dependencies": "/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrlPackageTests.build/master.swiftdeps"
   },
-  "/Users/an/Documents/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrlPackageTests.derived/runner.swift": {
-    "dependencies": "/Users/an/Documents/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrlPackageTests.build/runner.d",
-    "object": "/Users/an/Documents/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrlPackageTests.build/runner.swift.o",
-    "swiftmodule": "/Users/an/Documents/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrlPackageTests.build/runner~partial.swiftmodule",
-    "swift-dependencies": "/Users/an/Documents/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrlPackageTests.build/runner.swiftdeps"
+  "/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrlPackageTests.derived/runner.swift": {
+    "dependencies": "/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrlPackageTests.build/runner.d",
+    "object": "/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrlPackageTests.build/runner.swift.o",
+    "swiftmodule": "/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrlPackageTests.build/runner~partial.swiftmodule",
+    "swift-dependencies": "/Volumes/SSD/Users/an/Documents/github/MacBLECtrl/.build/arm64-apple-macosx/debug/MacBLECtrlPackageTests.build/runner.swiftdeps"
   }
 }
