@@ -1,8 +1,8 @@
 sensor:
-  - platform: template
-    sensors:
-      ble_battery:
-        friendly_name: "蓝牙设备电量"
-        unit_of_measurement: "%"　
-        device_class: battery
-        value_template: "{{ states('sensor.ble_battery') }}"
+  - platform: rest
+    name: "Device Battery Level"
+    resource: "http://172.17.123.229:8080/device/CB74077F-467B-E8AD-3E85-316FC5FDF32F"
+    method: GET
+    value_template: "{{ value_json.batteryLevel }}"
+    unit_of_measurement: "%"
+    scan_interval: 60  # 每分钟请求一次数据
