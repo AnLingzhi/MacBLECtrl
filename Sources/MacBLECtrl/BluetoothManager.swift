@@ -1,7 +1,8 @@
 import Foundation
-import CoreBluetooth
+@preconcurrency import CoreBluetooth // Add @preconcurrency to handle Sendable warnings
 import Vapor // For Application, Logger, EventLoopFuture, Abort etc.
 import Logging
+import NIO // Import NIO for TimeAmount
 
 // Define internal structures to hold device state
 struct DiscoveredDevice {
@@ -142,12 +143,30 @@ actor BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate
             centralManager.connect(peripheral, options: nil)
 
             // Wait for the promise to complete (or timeout)
+            let timeoutSeconds: Int64 = 15 // 15 seconds timeout
+            let timeout = TimeAmount.seconds(timeoutSeconds)
+            let eventLoop = app.eventLoopGroup.next()
+
+            // Schedule a task to fail the promise if it times out
+            let timeoutTask = eventLoop.scheduleTask(in: timeout) {
+                promise.fail(Abort(.requestTimeout, reason: "Bluetooth operation timed out after \(timeoutSeconds) seconds"))
+                // Attempt to cancel connection on timeout using identifier
+                let identifierToCancel = peripheral.identifier // Capture Sendable identifier
+                Task {
+                    await self.cancelConnectionByIdentifier(identifier: identifierToCancel)
+                }
+            }
+
+            // Cancel the timeout task if the promise completes first
+            promise.futureResult.whenComplete { _ in
+                timeoutTask.cancel()
+            }
+
             do {
-                // Add a timeout mechanism
-                let batteryLevel = try await promise.futureResult.get() // Add timeout here if needed
-                logger.info("Successfully fetched battery level (\(batteryLevel ?? -1)) for \(identifier)")
-                 return DeviceDetail(
-                    name: peripheral.name,
+                let batteryLevel = try await promise.futureResult.get()
+                logger.info("Successfully fetched battery level (\(String(describing: batteryLevel))) for \(identifier)")
+                return DeviceDetail(
+                    name: peripheral.name, // Use peripheral.name which might be updated
                     identifier: identifier.uuidString,
                     batteryLevel: batteryLevel,
                     isConnected: peripheral.state == .connected // Re-check state
@@ -188,12 +207,27 @@ actor BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate
              peripheral.discoverServices([batteryServiceUUID])
         }
 
-        // Wait for the promise
-        do {
-            let batteryLevel = try await promise.futureResult.get() // Add timeout
-            return DeviceDetail(
-                name: peripheral.name,
-                identifier: peripheral.identifier.uuidString,
+            // Wait for the promise with timeout
+            let timeoutSeconds: Int64 = 15
+            let timeout = TimeAmount.seconds(timeoutSeconds)
+            let eventLoop = app.eventLoopGroup.next()
+
+            let timeoutTask = eventLoop.scheduleTask(in: timeout) {
+                promise.fail(Abort(.requestTimeout, reason: "Bluetooth operation timed out after \(timeoutSeconds) seconds"))
+                 let identifierToCancel = peripheral.identifier // Capture Sendable identifier
+                 Task {
+                    await self.cancelConnectionByIdentifier(identifier: identifierToCancel)
+                 }
+            }
+            promise.futureResult.whenComplete { _ in
+                timeoutTask.cancel()
+            }
+
+            do {
+                let batteryLevel = try await promise.futureResult.get()
+                return DeviceDetail(
+                    name: peripheral.name, // Use peripheral.name
+                    identifier: peripheral.identifier.uuidString, // Use peripheral.identifier
                 batteryLevel: batteryLevel,
                 isConnected: true
             )
@@ -215,11 +249,27 @@ actor BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate
 
         centralManager.connect(peripheral, options: nil)
 
+        // Wait for the promise with timeout
+        let timeoutSeconds: Int64 = 15
+        let timeout = TimeAmount.seconds(timeoutSeconds)
+        let eventLoop = app.eventLoopGroup.next()
+
+        let timeoutTask = eventLoop.scheduleTask(in: timeout) {
+            promise.fail(Abort(.requestTimeout, reason: "Bluetooth operation timed out after \(timeoutSeconds) seconds"))
+            let identifierToCancel = peripheral.identifier // Capture Sendable identifier
+            Task {
+                await self.cancelConnectionByIdentifier(identifier: identifierToCancel)
+            }
+        }
+        promise.futureResult.whenComplete { _ in
+            timeoutTask.cancel()
+        }
+
         do {
-            let batteryLevel = try await promise.futureResult.get() // Add timeout
-            logger.info("Successfully fetched battery level (\(batteryLevel ?? -1)) for \(peripheral.identifier)")
+            let batteryLevel = try await promise.futureResult.get()
+            logger.info("Successfully fetched battery level (\(String(describing: batteryLevel))) for \(peripheral.identifier)")
             return DeviceDetail(
-                name: peripheral.name,
+                name: peripheral.name, // Use peripheral.name
                 identifier: peripheral.identifier.uuidString,
                 batteryLevel: batteryLevel,
                 isConnected: peripheral.state == .connected
@@ -487,12 +537,33 @@ actor BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate
         }
     }
 
+    // Helper to cancel connection if needed (e.g., on timeout) using identifier
+    private func cancelConnectionByIdentifier(identifier: UUID) {
+        // Find the peripheral object using the identifier
+        // Check both discovered and connected lists, though it should likely be in discovered if connecting
+        let peripheralToCancel = discoveredPeripherals[identifier]?.peripheral ?? connectedPeripherals[identifier]
+
+        guard let peripheral = peripheralToCancel else {
+            logger.warning("Could not find peripheral \(identifier) to cancel connection.")
+            return
+        }
+
+        // Only cancel if we are connecting or connected
+        if peripheral.state == .connecting || peripheral.state == .connected {
+             logger.warning("Cancelling connection attempt to \(identifier) due to timeout or error.")
+             centralManager.cancelPeripheralConnection(peripheral)
+        } else {
+             logger.info("Peripheral \(identifier) was not connecting/connected when cancel was requested (state: \(peripheral.state.rawValue)).")
+        }
+    }
+
     // Helper to fail a battery promise
     private func failBatteryPromise(for identifier: UUID, error: Error) {
         if let promise = batteryPromises.removeValue(forKey: identifier) {
             promise.fail(error)
         }
     }
+
 }
 
 // Helper extension for CBManagerState rawValue logging
