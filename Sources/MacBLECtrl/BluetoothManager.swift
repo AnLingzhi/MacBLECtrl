@@ -105,24 +105,29 @@ actor BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate
 
     /// Attempts to connect to a device and retrieve its details (including battery).
     func getDeviceDetails(identifier: UUID) async throws -> DeviceDetail {
+        let requestID = UUID().uuidString.prefix(8)
+        logger.info("[\(requestID)] GET /device/\(identifier) - Starting detail retrieval.")
+
         guard centralManager != nil else {
-             logger.error("Central Manager not initialized yet.")
+             logger.error("[\(requestID)] Central Manager not initialized yet.")
              throw Abort(.internalServerError, reason: "BluetoothManager not initialized")
         }
         guard centralManager.state == .poweredOn else {
-            logger.warning("Cannot connect: Bluetooth is not powered on (\(centralManager.state.rawValue)).")
+            logger.warning("[\(requestID)] Cannot connect: Bluetooth is not powered on (\(centralManager.state.description)).")
             throw Abort(.serviceUnavailable, reason: "Bluetooth not powered on")
         }
 
         // Check if we already know about this peripheral from scanning
         guard let discoveredDevice = discoveredPeripherals[identifier] else {
-            logger.warning("Device \(identifier) not found in discovered list. Trying to retrieve.")
+            logger.warning("[\(requestID)] Device \(identifier) not found in discovered list. Trying to retrieve from system.")
             // Attempt to retrieve peripheral directly if known to the system
              let knownPeripherals = centralManager.retrievePeripherals(withIdentifiers: [identifier])
              guard let peripheral = knownPeripherals.first else {
+                 logger.error("[\(requestID)] Device \(identifier) not found via retrieval.")
                  throw Abort(.notFound, reason: "Device \(identifier) not found or not discoverable.")
              }
              // Add to discovered list temporarily if retrieved
+             logger.info("[\(requestID)] Device \(identifier) retrieved from system. Proceeding to connect.")
              discoveredPeripherals[identifier] = DiscoveredDevice(peripheral: peripheral, name: peripheral.name, rssi: nil, advertisementData: [:], lastSeen: Date(), isConnectable: nil)
              return try await connectAndFetchDetails(peripheral: peripheral)
         }
@@ -131,11 +136,11 @@ actor BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate
 
         // Check if already connected
         if peripheral.state == .connected {
-            logger.info("Device \(identifier) already connected. Fetching battery level...")
+            logger.info("[\(requestID)] Device \(identifier) already connected. Fetching battery level directly.")
             // If already connected, try reading battery directly
             return try await fetchBatteryLevel(peripheral: peripheral)
         } else {
-            logger.info("Connecting to device \(identifier)...")
+            logger.info("[\(requestID)] Device \(identifier) not connected. Initiating connection.")
             // Create a promise to await the battery level result
             let promise = app.eventLoopGroup.next().makePromise(of: Int?.self)
             batteryPromises[identifier] = promise
@@ -143,12 +148,14 @@ actor BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate
             centralManager.connect(peripheral, options: nil)
 
             // Wait for the promise to complete (or timeout)
-            let timeoutSeconds: Int64 = 15 // 15 seconds timeout
+            let timeoutSeconds: Int64 = 5 // 5 seconds timeout
             let timeout = TimeAmount.seconds(timeoutSeconds)
             let eventLoop = app.eventLoopGroup.next()
 
             // Schedule a task to fail the promise if it times out
+            let logger = self.logger // Capture logger for Sendable closure
             let timeoutTask = eventLoop.scheduleTask(in: timeout) {
+                logger.warning("[\(requestID)] Connection to \(identifier) timed out after \(timeoutSeconds)s. Failing promise.")
                 promise.fail(Abort(.requestTimeout, reason: "Bluetooth operation timed out after \(timeoutSeconds) seconds"))
                 // Attempt to cancel connection on timeout using identifier
                 let identifierToCancel = peripheral.identifier // Capture Sendable identifier
@@ -163,8 +170,9 @@ actor BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate
             }
 
             do {
+                logger.info("[\(requestID)] Awaiting battery level promise for \(identifier)...")
                 let batteryLevel = try await promise.futureResult.get()
-                logger.info("Successfully fetched battery level (\(String(describing: batteryLevel))) for \(identifier)")
+                logger.info("[\(requestID)] Successfully fetched battery level (\(String(describing: batteryLevel))) for \(identifier)")
                 return DeviceDetail(
                     name: peripheral.name, // Use peripheral.name which might be updated
                     identifier: identifier.uuidString,
@@ -172,7 +180,7 @@ actor BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate
                     isConnected: peripheral.state == .connected // Re-check state
                 )
             } catch {
-                logger.error("Failed to get battery level for \(identifier): \(error)")
+                logger.error("[\(requestID)] Awaited promise for \(identifier) failed with error: \(error)")
                 // Clean up promise
                 batteryPromises.removeValue(forKey: identifier)
                 // Disconnect if connection attempt failed or timed out
@@ -208,7 +216,7 @@ actor BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate
         }
 
             // Wait for the promise with timeout
-            let timeoutSeconds: Int64 = 15
+            let timeoutSeconds: Int64 = 5
             let timeout = TimeAmount.seconds(timeoutSeconds)
             let eventLoop = app.eventLoopGroup.next()
 
@@ -250,7 +258,7 @@ actor BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate
         centralManager.connect(peripheral, options: nil)
 
         // Wait for the promise with timeout
-        let timeoutSeconds: Int64 = 15
+        let timeoutSeconds: Int64 = 5
         let timeout = TimeAmount.seconds(timeoutSeconds)
         let eventLoop = app.eventLoopGroup.next()
 
@@ -370,12 +378,12 @@ actor BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate
     }
 
      private func handleConnection(peripheral: CBPeripheral) {
-         logger.info("Connected to: \(peripheral.name ?? "N/A") (\(peripheral.identifier))")
+         logger.info("Delegate: didConnect to: \(peripheral.name ?? "N/A") (\(peripheral.identifier))")
          connectedPeripherals[peripheral.identifier] = peripheral
          peripheral.delegate = self // Set delegate *within the actor*
 
          // Discover battery service
-         logger.info("Discovering services for \(peripheral.identifier)...")
+         logger.info("Delegate: Discovering services for \(peripheral.identifier)...")
          peripheral.discoverServices([batteryServiceUUID])
      }
 
@@ -387,14 +395,15 @@ actor BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate
 
     private func handleFailedConnection(peripheral: CBPeripheral, error: Error?) {
         let errorDescription = error?.localizedDescription ?? "Unknown error"
-        logger.error("Failed to connect to \(peripheral.identifier): \(errorDescription)")
+        logger.error("Delegate: didFailToConnect to \(peripheral.identifier): \(errorDescription)")
         // Fail the corresponding promise if one exists
         if let promise = batteryPromises.removeValue(forKey: peripheral.identifier) {
+            logger.info("Delegate: Failing promise for \(peripheral.identifier) due to connection failure.")
             // Use a valid HTTP status or a generic error
             promise.fail(error ?? Abort(.internalServerError, reason: "Failed to connect"))
         }
         // Disconnect after connection failure
-        logger.info("Disconnecting from \(peripheral.identifier) after connection failure.")
+        logger.info("Delegate: Disconnecting from \(peripheral.identifier) after connection failure.")
         centralManager.cancelPeripheralConnection(peripheral)
     }
 

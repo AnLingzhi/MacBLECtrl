@@ -40,7 +40,7 @@ cp "Resources/com.example.MacBLECtrl.plist" "$RESOURCES_DIR/"
 
 # 创建PkgInfo文件
 echo "创建PkgInfo文件..."
-echo "APPL????" > "$CONTENTS_DIR/PkgInfo"
+echo "APPLE" > "$CONTENTS_DIR/PkgInfo"
 
 echo "应用程序构建完成: $(pwd)/$APP_DIR"
 echo ""
