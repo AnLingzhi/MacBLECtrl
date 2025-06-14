@@ -1,4 +1,20 @@
+# Add this section for the manual scan command
+rest_command:
+  ble_start_scan:
+    url: "http://172.17.123.229:8080/scan"
+    method: POST
+
 sensor:
+  # Add this new sensor for Bluetooth devices
+  - platform: rest
+    name: "Discovered Bluetooth Devices"
+    resource: "http://172.17.123.229:8080/devices"
+    method: GET
+    scan_interval: 60
+    value_template: "{{ value_json.devices | length }}"
+    unit_of_measurement: "devices"
+    json_attributes:
+      - "devices"
   - platform: rest
     name: "Device Battery Level"
     resource: "http://172.17.123.229:8080/device/CB74077F-467B-E8AD-3E85-316FC5FDF32F"

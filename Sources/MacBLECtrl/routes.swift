@@ -9,6 +9,11 @@ struct DeviceInfo: Content {
     let isConnectable: Bool? // Optional connectable status
 }
 
+// Add this new struct
+struct DeviceListResponse: Content {
+   let devices: [DeviceInfo]
+}
+
 struct DeviceDetail: Content {
     let name: String?
     let identifier: String // UUID string
@@ -48,7 +53,7 @@ func routes(_ app: Application) throws {
     }
 
     // Endpoint to get the list of discovered devices
-    app.get("devices") { req -> [DeviceInfo] in
+    app.get("devices") { req -> DeviceListResponse in // <-- Change return type
         guard let manager = req.application.bluetoothManager else {
             throw Abort(.internalServerError, reason: "BluetoothManager not initialized")
         }
@@ -56,7 +61,7 @@ func routes(_ app: Application) throws {
         // Note: This requires BluetoothManager to store discovered devices
         // in a thread-safe way accessible here.
         let devices = await manager.getDiscoveredDevices()
-        return devices.map { deviceInfo in
+        let deviceInfos = devices.map { deviceInfo in
             DeviceInfo(
                 name: deviceInfo.name,
                 identifier: deviceInfo.identifier,
@@ -64,6 +69,7 @@ func routes(_ app: Application) throws {
                 isConnectable: deviceInfo.isConnectable
             )
         }
+        return DeviceListResponse(devices: deviceInfos) // <-- Return the wrapped response
     }
 
     // Endpoint to get details (including battery) for a specific device
