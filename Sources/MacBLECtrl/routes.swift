@@ -15,6 +15,29 @@ struct DeviceDetail: Content {
     let batteryLevel: Int? // Optional battery level
     let isConnected: Bool
     // Add other relevant details if needed
+
+    // Custom CodingKeys to ensure all keys are present in the JSON output
+    private enum CodingKeys: String, CodingKey {
+        case name, identifier, batteryLevel, isConnected
+    }
+
+    // Custom encoder to write `null` for nil values
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(self.identifier, forKey: .identifier)
+        try container.encode(self.isConnected, forKey: .isConnected)
+
+        // Explicitly encode nil as null for name and batteryLevel
+        try container.encodeIfPresent(self.name, forKey: .name)
+        if self.name == nil {
+            try container.encodeNil(forKey: .name)
+        }
+        
+        try container.encodeIfPresent(self.batteryLevel, forKey: .batteryLevel)
+        if self.batteryLevel == nil {
+            try container.encodeNil(forKey: .batteryLevel)
+        }
+    }
 }
 
 func routes(_ app: Application) throws {
@@ -51,20 +74,29 @@ func routes(_ app: Application) throws {
         }
 
         guard let manager = req.application.bluetoothManager else {
+            req.logger.error("BluetoothManager not initialized for device request.")
             throw Abort(.internalServerError, reason: "BluetoothManager not initialized")
         }
 
-        // Request battery level for the specific device
-        // This requires BluetoothManager to handle connection and fetching
-        let detail = try await manager.getDeviceDetails(identifier: identifier)
-
-        return DeviceDetail(
-            name: detail.name,
-            identifier: detail.identifier,
-            batteryLevel: detail.batteryLevel,
-            isConnected: detail.isConnected
-            // Map other details here
-        )
+        do {
+            // Request battery level for the specific device
+            let detail = try await manager.getDeviceDetails(identifier: identifier)
+            return DeviceDetail(
+                name: detail.name,
+                identifier: detail.identifier,
+                batteryLevel: detail.batteryLevel,
+                isConnected: detail.isConnected
+            )
+        } catch {
+            // If any error occurs (timeout, not found, etc.), log it and return a default response
+            req.logger.warning("Failed to get details for \(identifierString): \(error.localizedDescription). Returning default values.")
+            return DeviceDetail(
+                name: nil, // Name is unknown
+                identifier: identifierString,
+                batteryLevel: nil, // Battery level is unknown
+                isConnected: false // Definitely not connected
+            )
+        }
     }
 
     // Optional: Endpoint to trigger a new scan (might be useful)
