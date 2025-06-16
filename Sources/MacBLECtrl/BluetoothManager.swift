@@ -36,6 +36,7 @@ actor BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate
 
     private let batteryServiceUUID = CBUUID(string: "180F")
     private let batteryCharacteristicUUID = CBUUID(string: "2A19")
+    private let staleThreshold: TimeInterval = 180 // 3 minutes for a device to be considered stale
 
     private var logger: Logger { app.logger } // Use Vapor's logger
 
@@ -92,7 +93,24 @@ actor BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate
 
     /// Returns a list of discovered devices.
     func getDiscoveredDevices() -> [DeviceInfo] {
-        // Return a snapshot of the current state
+        // First, clean up stale peripherals
+        let now = Date()
+        let initialCount = discoveredPeripherals.count
+
+        discoveredPeripherals = discoveredPeripherals.filter { (identifier, device) in
+            let isStale = now.timeIntervalSince(device.lastSeen) > staleThreshold
+            if isStale {
+                logger.info("Removing stale device: \(device.name ?? identifier.uuidString) (last seen \(device.lastSeen))")
+            }
+            return !isStale
+        }
+
+        let finalCount = discoveredPeripherals.count
+        if initialCount > finalCount {
+            logger.info("Cleaned up \(initialCount - finalCount) stale device(s).")
+        }
+
+        // Return a snapshot of the current (cleaned) state
         return discoveredPeripherals.values.map { device in
             DeviceInfo(
                 name: device.name,
